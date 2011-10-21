@@ -1,0 +1,13 @@
+/**
+ * Build file for this project.
+ *
+ * It's rather straight-forward at this point.
+ *
+ * @author Arthur Gonigberg
+ * @since October 20, 2011
+ */
+
+apply plugin: 'groovy'
+apply plugin: 'java'
+apply plugin: 'idea'
+
