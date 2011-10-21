@@ -11,3 +11,12 @@ apply plugin: 'groovy'
 apply plugin: 'java'
 apply plugin: 'idea'
 
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    groovy group: 'org.codehaus.groovy', name: 'groovy', version: '1.8.3'
+    testCompile group: 'junit', name: 'junit', version: '4.8.2'
+}
+
