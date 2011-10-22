@@ -17,10 +17,10 @@ class BlockParser {
 
     def parseBlock(String block) {
         if (block.endsWith(HEADER_1)) {
-            converter.covertHeader1(spanParser.parseSpan(stripper.stripHeader(block)))
+            converter.covertHeader(spanParser.parseSpan(stripper.stripHeader(block)),1)
         }
         else if (block.endsWith(HEADER_2)) {
-            converter.covertHeader2(spanParser.parseSpan(stripper.stripHeader(block)))
+            converter.covertHeader(spanParser.parseSpan(stripper.stripHeader(block)),2)
         }
         else if (block.startsWith(BLOCKQUOTE)) {
             converter.covertBlockquote(spanParser.parseSpan(stripper.stripBlockquote(block)))

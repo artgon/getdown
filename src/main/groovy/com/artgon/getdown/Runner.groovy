@@ -8,6 +8,6 @@ package com.artgon.getdown
 class Runner {
     static void main(String[] args) {
         def parser = new MarkdownParser()
-        println( parser.parseText(new File(args[0]).text) )
+        println(parser.parseText(new File(args[0]).text))
     }
 }

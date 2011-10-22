@@ -7,13 +7,11 @@ package com.artgon.getdown
  */
 class MarkdownParser {
     def parseText(String fileText) {
-        def resultList = []
-        fileText.split('\n\n').collect(resultList, { x ->
-            def p = new BlockParser()
-            p.parseBlock(x)
-        } )
-
-        def converter = new HtmlConverter()
-        converter.convertBlocks(resultList)
+        def parser = new BlockParser()
+        new HtmlConverter().convertBlocks(
+                fileText.split('\n\n').inject([]) {results, block ->
+                    results << parser.parseBlock(block)
+                }
+        )
     }
 }
