@@ -7,26 +7,48 @@ package com.artgon.getdown
  * @since 11-10-22
  */
 class BlockParser {
-    static final HEADER_1 = "="
-    static final HEADER_2 = "-"
-    static final BLOCKQUOTE = ">"
-
-    def converter = new HtmlConverter()
     def spanParser = new SpanParser()
-    def stripper = new MarkdownStripper()
 
-    def parseBlock(String block) {
-        if (block.endsWith(HEADER_1)) {
-            converter.covertHeader(spanParser.parseSpan(stripper.stripHeader(block)),1)
-        }
-        else if (block.endsWith(HEADER_2)) {
-            converter.covertHeader(spanParser.parseSpan(stripper.stripHeader(block)),2)
-        }
-        else if (block.startsWith(BLOCKQUOTE)) {
-            converter.covertBlockquote(spanParser.parseSpan(stripper.stripBlockquote(block)))
-        }
-        else {
-            converter.convertParagraph(spanParser.parseSpan(block))
-        }
+    def parseBlocks(TextContainer t) {
+        /*
+           7.1. headers
+           */
+        replaceHeader(t)
+        /*
+           7.2. horizontal rules
+           7.3. lists
+           7.4. code blocks
+           7.5. block quotes
+           */
+        replaceBlockquote(t)
+        /*
+           7.6. hash html blocks again (i.e. the markup we just created)
+           7.7. form paragraphs
+        */
+        // replace the block elements after
+        formatParagraph(t)
+    }
+
+    def replaceHeader(TextContainer t) {
+        t.replaceAll(/(.*)\n[=]+/, "<h1>\$1</h1>")
+        t.replaceAll(/(.*)\n[-]+/, "<h2>\$1</h2>")
+    }
+
+    def replaceBlockquote(TextContainer t) {
+        t
+    }
+
+    def formatParagraph(TextContainer t) {
+        /*
+           7.7.1. strip leading/trailing lines
+           7.7.2. split into blocks using \n\n
+               7.7.2.1. for each block, wrap in <p> unless it's hashed
+               7.7.2.2. parse spans
+           */
+        spanParser.parseText(t)
+        /*
+           7.7.3. unhash html blocks
+           7.7.4. put blocks back together separated by \n\n
+         */
     }
 }
