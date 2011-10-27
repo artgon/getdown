@@ -40,10 +40,15 @@ class BlockParser {
     }
 
     def replaceBlockquote(TextContainer t) {
+        /*
+        Regex description:
+            This regex grabs the first instance of ">", potentially
+            surrounded by space/tab and any subsequent lines
+         */
         t.replaceAll('((^[ \t]*>[ \t]?.+\n(.+\n)*\n*)+)') {groups ->
-            def bq = groups[0].replaceAll('^[ \t]*>[ \t]?','')
-            bq = bq.replaceAll('^[ \t]+$','')
-            bq = parseBlocks(new TextContainer(bq))
+            def bq = groups[0].replaceAll('^[ \t]*>[ \t]?', '') // strip the first line's '>'
+            bq = bq.replaceAll('^[ \t]+$', '') // remove all whitespace lines
+            bq = parseBlocks(new TextContainer(bq)) // recurse through block parser
             "<blockquote>\n$bq\n</blockquote>\n\n"
         }
     }

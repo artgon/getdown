@@ -12,17 +12,27 @@ class HashStore {
     def hashMap = [:]
 
     def hashHtmlBlocks(TextContainer t) {
+        // this is a set of all possible html tags we want to hash
         def tagsA = "p|div|h[1-6]|blockquote|pre|table|dl|ol|ul|script|noscript|form|fieldset|iframe|math|ins|del"
 
+        // this closure hashes a value and returns it surrounded by new lines
         def hashHtmlClosure = {text ->
             '\n\n' + hashValue(text[0]) + '\n\n'
         }
-        // strip tags
+        /*
+        Regex description:
+            This regular expression grabs any matching set of tags, from the set above and
+            returns it. After the beginning of the first tag, it expects a word break, then
+            any number of characters, including new lines, and finally any possible spaces,
+            newlines or the end of the string.
+         */
         t.replaceAll("(^<($tagsA)\\b(.*\\n)*?.*</\\2>[ \\t]*(?=\\n+|\\Z))", hashHtmlClosure)
     }
 
     def unHashHtmlBlocks(String s){
+        // get rid of all the newline characters
         def strippedS = s.replaceAll('\n','')
+        // return the original value if the key exists
         if( containsKey(strippedS)){
             return hashMap.get(strippedS)
         }
@@ -37,10 +47,6 @@ class HashStore {
 
     def containsKey(String t) {
         hashMap.containsKey(t)
-    }
-
-    def containsValue(String t) {
-        hashMap.containsValue(t)
     }
 
     def static hashString(String s) {
