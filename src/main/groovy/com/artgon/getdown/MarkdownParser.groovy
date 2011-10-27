@@ -1,7 +1,5 @@
 package com.artgon.getdown
 
-import java.util.regex.Pattern
-
 /**
  * This is the main parser class where everything begins...
  *
