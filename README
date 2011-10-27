@@ -1,3 +1,13 @@
 This is a really basic implementation of Markdown in Groovy. It is by no means complete.
 
 Feel free to use any of the code as you like.
+
+Copyright (c) 2011 Arthur Gonigberg
+
+
+
+Note: this implementation is heavily inspired by the algorithm used in the original
+Perl version, by John Gruber.
+
+Copyright (c) 2004 John Gruber
+# <http://daringfireball.net/projects/markdown/>
