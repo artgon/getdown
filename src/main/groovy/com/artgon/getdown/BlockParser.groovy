@@ -7,6 +7,8 @@ package com.artgon.getdown
  * @since 11-10-22
  */
 class BlockParser {
+    HashStore hashStore
+
     def spanParser = new SpanParser()
 
     def parseBlocks(TextContainer t) {
@@ -23,6 +25,9 @@ class BlockParser {
         replaceBlockquote(t)
         /*
            7.6. hash html blocks again (i.e. the markup we just created)
+           */
+        hashStore.hashHtmlBlocks(t)
+        /*
            7.7. form paragraphs
         */
         // replace the block elements after
@@ -35,20 +40,53 @@ class BlockParser {
     }
 
     def replaceBlockquote(TextContainer t) {
-        t
+        t.replaceAll('((^[ \t]*>[ \t]?.+\n(.+\n)*\n*)+)') {groups ->
+            def bq = groups[0].replaceAll('^[ \t]*>[ \t]?','')
+            bq = bq.replaceAll('^[ \t]+$','')
+            bq = parseBlocks(new TextContainer(bq))
+            "<blockquote>\n$bq\n</blockquote>\n\n"
+        }
     }
 
     def formatParagraph(TextContainer t) {
         /*
            7.7.1. strip leading/trailing lines
+           */
+        t.replaceAll('\\A\n+', '')
+        t.replaceAll('\n+\\Z', '')
+
+        /*
            7.7.2. split into blocks using \n\n
                7.7.2.1. for each block, wrap in <p> unless it's hashed
                7.7.2.2. parse spans
-           */
-        spanParser.parseText(t)
-        /*
            7.7.3. unhash html blocks
+           */
+        def blocks = t.toString().split('\n\n').inject([]) {results, block ->
+            if (!block.isEmpty()) {
+                if (hashStore.containsKey(block)) {
+                    results << hashStore.unHashHtmlBlocks(block)
+                }
+                else {
+                    def parsedBlock = spanParser.parseText(block)
+                    results << "<p>$parsedBlock</p>"
+                }
+            }
+            else {
+                results
+            }
+        }
+        /*
            7.7.4. put blocks back together separated by \n\n
          */
+        def sb = new StringBuilder()
+        blocks.eachWithIndex { block, index ->
+            if (index == blocks.size() - 1) {
+                sb = sb + block
+            }
+            else {
+                sb = sb + block + '\n\n'
+            }
+        }
+        sb.toString()
     }
 }

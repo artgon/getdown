@@ -7,7 +7,8 @@ package com.artgon.getdown
  * @since 11-10-22
  */
 class SpanParser {
-    def parseText(TextContainer span) {
+    def parseText(String s) {
+        def span = new TextContainer(s)
         /*
            7.7.2.2.1. do code spans
            7.7.2.2.2. do escape special chars

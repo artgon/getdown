@@ -1,21 +1,19 @@
 package com.artgon.getdown
 
-import org.junit.Test
-import static groovy.util.GroovyTestCase.assertEquals
-
 /**
  * Testing the markdown parser
  *
  * @author Arthur Gonigberg
  * @since 11-10-22
  */
-class MarkdownParserTest {
+class MarkdownParserTest extends GroovyTestCase {
 
-    @Test
     def void testParser() {
         def markdown =
 """Arthur
 ======
+
+<p>test</p>
 
 is cool
 
@@ -28,10 +26,12 @@ guy
         def html =
 """<h1>Arthur</h1>
 
+<p>test</p>
+
 <p>is cool</p>
 
 <blockquote>
-  <p>man
+<p>man
 dude
 guy</p>
 </blockquote>
